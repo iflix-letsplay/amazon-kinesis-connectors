@@ -15,6 +15,7 @@
 package com.amazonaws.services.kinesis.connectors;
 
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
 
 import org.easymock.EasyMock;
@@ -74,7 +75,7 @@ public class UnmodifiableBufferTests {
 
         // Expect exceptions on the following operations
         exception.expect(UnsupportedOperationException.class);
-        umb.consumeRecord(1, 1, "");
+        umb.consumeRecord(1, 1, "", new Date());
 
         exception.expect(UnsupportedOperationException.class);
         umb.clear();

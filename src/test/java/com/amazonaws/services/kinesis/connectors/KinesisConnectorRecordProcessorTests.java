@@ -137,7 +137,7 @@ public class KinesisConnectorRecordProcessorTests {
 
         // Buffer Behavior:
         // consume numRecords dummy records
-        buffer.consumeRecord(o, buf, EasyMock.anyObject(String.class));
+        buffer.consumeRecord(o, buf, EasyMock.anyObject(String.class), new Date());
         EasyMock.expectLastCall().times(numRecords);
         buffer.getLastSequenceNumber();
         EasyMock.expectLastCall().andReturn(DEFAULT_SEQUENCE_NUMBER);
@@ -209,7 +209,7 @@ public class KinesisConnectorRecordProcessorTests {
 
         // Buffer Behavior:
         // consume numRecords dummy records
-        buffer.consumeRecord(o, buf, seq);
+        buffer.consumeRecord(o, buf, seq, new Date());
         EasyMock.expectLastCall().times(numRecords);
 
         // check full buffer and return true
@@ -281,7 +281,7 @@ public class KinesisConnectorRecordProcessorTests {
 
         // Buffer Behavior:
         // consume numRecords dummy records
-        buffer.consumeRecord(o, buf, EasyMock.anyObject(String.class));
+        buffer.consumeRecord(o, buf, EasyMock.anyObject(String.class), new Date());
         EasyMock.expectLastCall().times(numTotalRecords);
         buffer.getLastSequenceNumber();
         EasyMock.expectLastCall().andReturn(DEFAULT_SEQUENCE_NUMBER);
@@ -347,11 +347,11 @@ public class KinesisConnectorRecordProcessorTests {
         // set expectations for each record
         EasyMock.expect(transformer.toClass(EasyMock.anyObject(Record.class))).andReturn(dummyRecord1);
         EasyMock.expect(filter.keepRecord(dummyRecord1)).andReturn(true);
-        buffer.consumeRecord(dummyRecord1, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER);
+        buffer.consumeRecord(dummyRecord1, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER, new Date());
 
         EasyMock.expect(transformer.toClass(EasyMock.anyObject(Record.class))).andReturn(dummyRecord2);
         EasyMock.expect(filter.keepRecord(dummyRecord2)).andReturn(true);
-        buffer.consumeRecord(dummyRecord2, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER);
+        buffer.consumeRecord(dummyRecord2, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER, new Date());
 
         EasyMock.expect(buffer.shouldFlush()).andReturn(true);
 
@@ -422,11 +422,11 @@ public class KinesisConnectorRecordProcessorTests {
         // set expectations for each record
         EasyMock.expect(transformer.toClass(EasyMock.anyObject(Record.class))).andReturn(dummyRecord1);
         EasyMock.expect(filter.keepRecord(dummyRecord1)).andReturn(true);
-        buffer.consumeRecord(dummyRecord1, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER);
+        buffer.consumeRecord(dummyRecord1, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER, new Date());
 
         EasyMock.expect(transformer.toClass(EasyMock.anyObject(Record.class))).andReturn(dummyRecord2);
         EasyMock.expect(filter.keepRecord(dummyRecord2)).andReturn(true);
-        buffer.consumeRecord(dummyRecord2, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER);
+        buffer.consumeRecord(dummyRecord2, DEFAULT_RECORD_BYTE_SIZE, DEFAULT_SEQUENCE_NUMBER, new Date());
 
         EasyMock.expect(buffer.shouldFlush()).andReturn(true);
 

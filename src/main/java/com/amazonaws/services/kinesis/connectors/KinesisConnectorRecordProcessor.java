@@ -139,7 +139,12 @@ public class KinesisConnectorRecordProcessor<T, U> implements IRecordProcessor {
 
     private void filterAndBufferRecord(T transformedRecord, Record record) {
         if (filter.keepRecord(transformedRecord)) {
-            buffer.consumeRecord(transformedRecord, record.getData().array().length, record.getSequenceNumber());
+            buffer.consumeRecord(
+                    transformedRecord,
+                    record.getData().array().length,
+                    record.getSequenceNumber(),
+                    record.getApproximateArrivalTimestamp()
+            );
         }
     }
 
