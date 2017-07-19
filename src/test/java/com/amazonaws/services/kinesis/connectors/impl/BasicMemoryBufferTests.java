@@ -18,6 +18,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertFalse;
 import static org.junit.Assert.assertTrue;
 
+import java.util.Date;
 import java.util.List;
 import java.util.Properties;
 
@@ -64,7 +65,7 @@ public class BasicMemoryBufferTests {
         control.replay();
         BasicMemoryBuffer<Integer> buffer = new BasicMemoryBuffer<Integer>(config);
         for (i = 0; i < iters; i++) {
-            buffer.consumeRecord(i, 1, Integer.toString(i));
+            buffer.consumeRecord(i, 1, Integer.toString(i), new Date());
         }
         control.verify();
 
@@ -102,7 +103,7 @@ public class BasicMemoryBufferTests {
         BasicMemoryBuffer<Integer> buffer = new BasicMemoryBuffer<Integer>(config);
         for (i = 0; i < iters; i++) {
             assertFalse("Failed at count " + i, buffer.shouldFlush());
-            buffer.consumeRecord(i, recordSize, Integer.toString(i));
+            buffer.consumeRecord(i, recordSize, Integer.toString(i), new Date());
         }
         control.verify();
         assertTrue(buffer.shouldFlush());
@@ -120,7 +121,7 @@ public class BasicMemoryBufferTests {
         buffer2.clear();
         // put in one records so that neither record count limit nor byte size limit is 
         // reached but buffer is not empty
-        buffer2.consumeRecord(1, 1, "1"); 
+        buffer2.consumeRecord(1, 1, "1", new Date());
         assertFalse(buffer2.shouldFlush());
         assertFalse(buffer2.shouldFlush());
         assertTrue(buffer2.shouldFlush());

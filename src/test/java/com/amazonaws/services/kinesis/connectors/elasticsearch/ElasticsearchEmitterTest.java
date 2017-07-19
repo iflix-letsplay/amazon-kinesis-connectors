@@ -166,7 +166,7 @@ public class ElasticsearchEmitterTest {
 
         replay(elasticsearchClientMock, buffer, mockBulkBuilder, mockIndexBuilder, mockFuture, mockBulkResponse);
 
-        List<ElasticsearchObject> failures = emitter.emit(buffer);
+        List<ElasticsearchObject> failures = emitter.emit(buffer, "-shardId-");
         assertTrue(failures.isEmpty());
 
         verify(elasticsearchClientMock, buffer, mockBulkBuilder, mockIndexBuilder, mockFuture, mockBulkResponse);
@@ -198,7 +198,7 @@ public class ElasticsearchEmitterTest {
         replay(elasticsearchClientMock, r1, r2, r3, buffer, mockBulkBuilder, mockIndexBuilder, mockFuture,
                 mockBulkResponse);
 
-        List<ElasticsearchObject> failures = emitter.emit(buffer);
+        List<ElasticsearchObject> failures = emitter.emit(buffer, "-shardId-");
         assertTrue(failures.isEmpty());
 
         verify(elasticsearchClientMock, r1, r2, r3, buffer, mockBulkBuilder, mockIndexBuilder, mockFuture,
@@ -265,7 +265,7 @@ public class ElasticsearchEmitterTest {
                 mockBulkResponse, mockAdminClient, mockClusterAdminClient, mockHealthRequestBuilder, mockHealthFuture,
                 mockResponse);
 
-        List<ElasticsearchObject> failures = emitter.emit(buffer);
+        List<ElasticsearchObject> failures = emitter.emit(buffer, "-shardId-");
         assertTrue(failures.size() == 1);
         // the emitter should return the exact object that failed
         assertEquals(failures.get(0), records.get(1));
@@ -314,7 +314,7 @@ public class ElasticsearchEmitterTest {
         replay(elasticsearchClientMock, r1, r2, r3, buffer, mockBulkBuilder, mockIndexBuilder, mockFuture,
                 mockBulkResponse);
 
-        List<ElasticsearchObject> failures = emitter.emit(buffer);
+        List<ElasticsearchObject> failures = emitter.emit(buffer, "-shardId-");
         assertTrue(failures.isEmpty());
 
         verify(elasticsearchClientMock, r1, r2, r3, buffer, mockBulkBuilder, mockIndexBuilder, mockFuture,

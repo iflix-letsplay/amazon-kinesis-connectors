@@ -14,6 +14,7 @@
  */
 package com.amazonaws.services.kinesis.connectors.interfaces;
 
+import java.util.Date;
 import java.util.List;
 
 /**
@@ -67,12 +68,16 @@ public interface IBuffer<T> {
      * @param sequenceNumber
      *        Amazon Kinesis sequence identifier
      */
-    public void consumeRecord(T record, int recordBytes, String sequenceNumber);
+    public void consumeRecord(T record, int recordBytes, String sequenceNumber, Date approximateArrivalTimestamp);
 
     /**
      * Clears the buffer
      */
     public void clear();
+
+    public Date getFirstApproximateArrivalTimestamp();
+
+    public Date getLastApproximateArrivalTimestamp();
 
     /**
      * Get the sequence number of the first record stored in the buffer. Used for bookkeeping and

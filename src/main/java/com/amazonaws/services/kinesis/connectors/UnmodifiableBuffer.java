@@ -15,6 +15,7 @@
 package com.amazonaws.services.kinesis.connectors;
 
 import java.util.Collections;
+import java.util.Date;
 import java.util.List;
 import java.util.Objects;
 
@@ -64,13 +65,23 @@ public class UnmodifiableBuffer<T> implements IBuffer<T> {
     }
 
     @Override
-    public void consumeRecord(T record, int recordBytes, String sequenceNumber) {
+    public void consumeRecord(T record, int recordBytes, String sequenceNumber, Date approximateArrivalTimestamp) {
         throw new UnsupportedOperationException("This is an unmodifiable buffer");
     }
 
     @Override
     public void clear() {
         throw new UnsupportedOperationException("This is an unmodifiable buffer");
+    }
+
+    @Override
+    public Date getFirstApproximateArrivalTimestamp() {
+        return buf.getFirstApproximateArrivalTimestamp();
+    }
+
+    @Override
+    public Date getLastApproximateArrivalTimestamp() {
+        return buf.getLastApproximateArrivalTimestamp();
     }
 
     @Override

@@ -60,7 +60,7 @@ public class DynamoDBEmitter implements IEmitter<Map<String, AttributeValue>> {
     }
 
     @Override
-    public List<Map<String, AttributeValue>> emit(final UnmodifiableBuffer<Map<String, AttributeValue>> buffer)
+    public List<Map<String, AttributeValue>> emit(final UnmodifiableBuffer<Map<String, AttributeValue>> buffer, final String shardId)
         throws IOException {
         // Map of WriteRequests to records for reference
         Map<WriteRequest, Map<String, AttributeValue>> requestMap =

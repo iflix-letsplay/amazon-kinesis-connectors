@@ -39,12 +39,15 @@ public interface IEmitter<T> {
      * 
      * @param buffer
      *        The full buffer of records
+     * @param shardId
+     *        The id of the Kinesis stream shard where the records in the buffer come from. Useful
+     *        for checkpointing or used in filenames.
      * @throws IOException
      *         A failure was reached that is not recoverable, no retry will occur and the fail
      *         method will be called
      * @return A list of records that failed to emit to be retried
      */
-    List<T> emit(UnmodifiableBuffer<T> buffer) throws IOException;
+    List<T> emit(UnmodifiableBuffer<T> buffer, String shardId) throws IOException;
 
     /**
      * This method defines how to handle a set of records that cannot successfully be emitted.

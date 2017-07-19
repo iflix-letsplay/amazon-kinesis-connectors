@@ -14,6 +14,7 @@
  */
 package com.amazonaws.services.kinesis.connectors.impl;
 
+import java.util.Date;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.concurrent.atomic.AtomicLong;
@@ -36,6 +37,9 @@ public class BasicMemoryBuffer<T> implements IBuffer<T> {
 
     private final List<T> buffer;
     private final AtomicLong byteCount;
+
+    private Date firstApproximateArrivalTimestamp;
+    private Date lastApproximateArrivalTimestamp;
 
     private String firstSequenceNumber;
     private String lastSequenceNumber;
@@ -71,11 +75,13 @@ public class BasicMemoryBuffer<T> implements IBuffer<T> {
     }
 
     @Override
-    public void consumeRecord(T record, int recordSize, String sequenceNumber) {
+    public void consumeRecord(T record, int recordSize, String sequenceNumber, Date approximateArrivalTimestamp) {
         if (buffer.isEmpty()) {
             firstSequenceNumber = sequenceNumber;
+            firstApproximateArrivalTimestamp = approximateArrivalTimestamp;
         }
         lastSequenceNumber = sequenceNumber;
+        lastApproximateArrivalTimestamp = approximateArrivalTimestamp;
         buffer.add(record);
         byteCount.addAndGet(recordSize);
     }
@@ -85,6 +91,16 @@ public class BasicMemoryBuffer<T> implements IBuffer<T> {
         buffer.clear();
         byteCount.set(0);
         previousFlushTimeMillisecond = getCurrentTimeMilliseconds();
+    }
+
+    @Override
+    public Date getFirstApproximateArrivalTimestamp() {
+        return firstApproximateArrivalTimestamp;
+    }
+
+    @Override
+    public Date getLastApproximateArrivalTimestamp() {
+        return lastApproximateArrivalTimestamp;
     }
 
     @Override

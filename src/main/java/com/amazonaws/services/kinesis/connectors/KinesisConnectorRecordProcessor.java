@@ -139,7 +139,12 @@ public class KinesisConnectorRecordProcessor<T, U> implements IRecordProcessor {
 
     private void filterAndBufferRecord(T transformedRecord, Record record) {
         if (filter.keepRecord(transformedRecord)) {
-            buffer.consumeRecord(transformedRecord, record.getData().array().length, record.getSequenceNumber());
+            buffer.consumeRecord(
+                    transformedRecord,
+                    record.getData().array().length,
+                    record.getSequenceNumber(),
+                    record.getApproximateArrivalTimestamp()
+            );
         }
     }
 
@@ -159,7 +164,7 @@ public class KinesisConnectorRecordProcessor<T, U> implements IRecordProcessor {
         List<U> unprocessed = new ArrayList<U>(emitItems);
         try {
             for (int numTries = 0; numTries < retryLimit; numTries++) {
-                unprocessed = emitter.emit(new UnmodifiableBuffer<U>(buffer, unprocessed));
+                unprocessed = emitter.emit(new UnmodifiableBuffer<U>(buffer, unprocessed), shardId);
                 if (unprocessed.isEmpty()) {
                     break;
                 }
