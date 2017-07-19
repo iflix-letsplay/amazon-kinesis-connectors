@@ -175,17 +175,19 @@ public class KinesisConnectorRecordProcessor<T, U> implements IRecordProcessor {
             }
             if (!unprocessed.isEmpty()) {
                 emitter.fail(unprocessed);
-            }
-            final String lastSequenceNumberProcessed = buffer.getLastSequenceNumber();
-            buffer.clear();
-            // checkpoint once all the records have been consumed
-            if (lastSequenceNumberProcessed != null) {
-                checkpointer.checkpoint(lastSequenceNumberProcessed);
+            } else {
+                // checkpoint once all the records have been successfully processed
+                final String lastSequenceNumberProcessed = buffer.getLastSequenceNumber();
+                if (lastSequenceNumberProcessed != null) {
+                    checkpointer.checkpoint(lastSequenceNumberProcessed);
+                }
             }
         } catch (IOException | KinesisClientLibDependencyException | InvalidStateException | ThrottlingException
                 | ShutdownException e) {
             LOG.error(e);
             emitter.fail(unprocessed);
+        } finally {
+            buffer.clear();
         }
     }
 
