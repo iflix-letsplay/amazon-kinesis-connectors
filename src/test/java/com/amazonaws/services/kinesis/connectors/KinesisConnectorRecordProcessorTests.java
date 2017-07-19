@@ -16,10 +16,7 @@ package com.amazonaws.services.kinesis.connectors;
 
 import java.io.IOException;
 import java.nio.ByteBuffer;
-import java.util.ArrayList;
-import java.util.Collections;
-import java.util.List;
-import java.util.Properties;
+import java.util.*;
 
 import org.easymock.EasyMock;
 import org.easymock.IMocksControl;
@@ -159,7 +156,7 @@ public class KinesisConnectorRecordProcessorTests {
 
         // Emitter behavior:
         // one call to emit
-        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class))).andReturn(
+        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class), "-shardId-")).andReturn(
                 Collections.emptyList());
 
         // Checkpointer Behavior:
@@ -223,7 +220,7 @@ public class KinesisConnectorRecordProcessorTests {
 
         // Emitter behavior:
         // one call to emit
-        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class))).andThrow(
+        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class), "-shardId-")).andThrow(
                 new IOException());
         emitter.fail(EasyMock.anyObject(List.class));
         EasyMock.expectLastCall();
@@ -299,7 +296,7 @@ public class KinesisConnectorRecordProcessorTests {
 
         // Emitter behavior:
         // one call to emit
-        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class))).andReturn(
+        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class), "-shardId-")).andReturn(
                 Collections.emptyList());
 
         // Checkpointer Behavior:
@@ -370,10 +367,10 @@ public class KinesisConnectorRecordProcessorTests {
 
         // uses the original list (i.e. emitItems)
         UnmodifiableBuffer<Object> unmodBuffer = new UnmodifiableBuffer<>(buffer, objectsAsList);
-        EasyMock.expect(emitter.emit(EasyMock.eq(unmodBuffer))).andReturn(singleObjectAsList);
+        EasyMock.expect(emitter.emit(EasyMock.eq(unmodBuffer), "-shardId-")).andReturn(singleObjectAsList);
         // uses the returned list (i.e. unprocessed)
         unmodBuffer = new UnmodifiableBuffer<>(buffer, singleObjectAsList);
-        EasyMock.expect(emitter.emit(EasyMock.eq(unmodBuffer))).andReturn(Collections.emptyList());
+        EasyMock.expect(emitter.emit(EasyMock.eq(unmodBuffer), "-shardId-")).andReturn(Collections.emptyList());
 
         // Done, so expect buffer clear and checkpoint
         buffer.getLastSequenceNumber();
@@ -445,7 +442,7 @@ public class KinesisConnectorRecordProcessorTests {
 
         // uses the original list (i.e. emitItems)
         UnmodifiableBuffer<Object> unmodBuffer = new UnmodifiableBuffer<>(buffer, objectsAsList);
-        EasyMock.expect(emitter.emit(EasyMock.eq(unmodBuffer))).andReturn(singleObjectAsList);
+        EasyMock.expect(emitter.emit(EasyMock.eq(unmodBuffer), "-shardId-")).andReturn(singleObjectAsList);
 
         // only one retry, so now we should expect fail to be called.
         emitter.fail(singleObjectAsList);
@@ -526,7 +523,7 @@ public class KinesisConnectorRecordProcessorTests {
         // expect flush cycle.
         // Get records from buffer, emit, clear, then checkpoint
         EasyMock.expect(buffer.getRecords()).andReturn(Collections.emptyList());
-        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class))).andReturn(
+        EasyMock.expect(emitter.emit(EasyMock.anyObject(UnmodifiableBuffer.class), "-shardId-")).andReturn(
                 Collections.emptyList());
         buffer.getLastSequenceNumber();
         EasyMock.expectLastCall().andReturn(null);
